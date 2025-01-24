@@ -25,11 +25,11 @@ def continuous_ping(ip_addresses):
                 # print(f'Ping delay to {location} ({ip_address}): {delay * 1000:.2f} ms')
                 delay = int(delay * 1000)
             else:
-                print(f'{time.strftime("%Y-%m-%d %H:%M:%S")}Ping to {location} ({ip_address}) failed.')
+                print(f'{time.strftime("%Y-%m-%d %H:%M:%S")} Ping to {location} ({ip_address}) failed.')
                 delay = 0  # 或者设定其他默认值
             if delay is not None and delay > threshold_ms:
                 log_message = f'High latency detected for {location} ({ip_address})! Delay: {delay}ms'
-
+                print(f'{time.strftime("%Y-%m-%d %H:%M:%S")}  Ping delay to {location} ({ip_address}): {delay * 1000:.2f} ms')
                 if log_method == "file":
                     try:
                         with open(f'{location}_ping_log.txt', 'a', encoding="utf-8") as log_file:
