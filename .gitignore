@@ -6,3 +6,5 @@ dist
 @*
 Home_ping_log.txt
 Server_guangzhou_ping_log.txt
+main_*.py
+*@*

@@ -7,7 +7,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 # 配置
-url = "https://unpkg.ovofish.com/"
+url = "https://unpkg.com/"
 headers = {
     'Accept-Language': 'zh-CN,zh;q=0.8',
     'Content-Type': 'text/html; Charset=utf-8',
@@ -123,8 +123,8 @@ else:
     use_proxy = input("是否使用代理？（输入 'y' 或 'n'）: ").lower()
     if use_proxy == 'y':
         # 获取代理设置
-        default_proxy_host = "10.10.50.210"  # 设置默认代理主机
-        default_proxy_port = 65115  # 设置默认代理端口
+        default_proxy_host = "10.10.50.65"  # 设置默认代理主机
+        default_proxy_port = 7897  # 设置默认代理端口
 
         proxy_host = input(f"请输入代理主机 (默认为 {default_proxy_host}): ") or default_proxy_host
         proxy_port = int(input(f"请输入代理端口 (默认为 {default_proxy_port}): ") or default_proxy_port)
