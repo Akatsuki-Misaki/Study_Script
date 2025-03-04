@@ -9,5 +9,6 @@
   运行前请先安装依赖库
 
 ```
-pip install pydub mutagen eyed3
+pip install pydub mutagen eyed3 
+pyinstaller -i ./q.ico --onefile --version-file version_info.rc main.py
 ```  
