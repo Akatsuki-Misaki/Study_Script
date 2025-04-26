@@ -4,9 +4,9 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-$ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
-// 可能会获取到多个ip，仅此使用最前面的IP
-$ip_address = explode(',', $ip_address)[0];
+// 获取ip
+$ip_address = $_SERVER['X-Real-IP'];
+
 
 // 将获取到的IP进行地址查询 小小API
 
