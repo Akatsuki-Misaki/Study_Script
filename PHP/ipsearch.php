@@ -4,8 +4,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// 获取ip
-$ip_address = $_SERVER['X-Real-IP'];
+// 从设备获取ip
+$ip_address = $_SERVER['REMOTE_ADDR'];
 
 
 // 将获取到的IP进行地址查询 小小API

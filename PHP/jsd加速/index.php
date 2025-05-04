@@ -1,5 +1,48 @@
 <?php
+//允许跨域
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+// 获取用户 IP 地址
+$ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+// 可能会获取到多个ip，仅此使用最前面的IP
+$ip_address = explode(',', $ip_address)[0];
+
+$info_ip = file_get_contents("https://v2.xxapi.cn/api/ip?ip=".$ip_address);
+// 获取网络json的data中的address
+$info_ip = json_decode($info_ip, true);
+$info_ip_address = $info_ip['data']['address'];
+$info_ip_isp = $info_ip['data']['isp'];
+$format = $_GET['format'];
+
+if($format === 'json'){
+    if($ip_address !== ''){
+        header('Content-Type: application/json');
+        http_response_code(200);
+        $data = array(
+            'ip' => $ip_address,
+            'address' => $info_ip_address,
+            'isp' => $info_ip_isp
+        );
+        echo json_encode($data);
+        exit();
+    }else{
+        header('Content-Type: application/json');
+        http_response_code(403);
+        $data = array(
+            'info' => '获取失败'
+        );
+        echo json_encode($data);
+        exit();
+    }
+}else if($format === 'text'){
+    echo $ip_address;
+    exit();
+}
+
+
+
 // 获取文件名
 $file = $_SERVER['REQUEST_URI'];
 // 获取文件类型
@@ -7,7 +50,7 @@ $file_info = pathinfo($file);
 // 获取文件后缀名
 $file_ext = $file_info['extension'];
 // 定义允许的后缀
-$allow_ext = array('js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'json', 'txt', 'moc', 'moc3', 'svg', 'webp' , 'hosts', 'ttf', 'woff', 'woff2', 'eot', 'sgmodule');
+$allow_ext = array('js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'json', 'txt', 'moc', 'moc3', 'svg', 'webp' , 'hosts', 'ttf', 'woff', 'woff2', 'eot', 'sgmodule', 'apk', 'zip', 'exe');
 if($_SERVER['REQUEST_URI'] == '/'){
     // 输出首页
     header('content-type: text/html;charset=utf-8');
@@ -21,7 +64,7 @@ if($_SERVER['REQUEST_URI'] == '/help'){
         'title'=> 'Welcome to use OvOfish Studio API',
         'message' => '这是一个反代接口,如有需要请联系管理员。',
         'How_to_use' => '您只需将原有的域名更改为本站域名如需要使用jsdelivr的反代请添加/jsd，如需要raw.githubusercontent.com则添加/gh',
-        'support_list' => '支持的接口：'.implode(',', array('/gh', '/jsd', '/unpkg')),
+        'support_list' => '支持的接口：'.implode(',', array('/gh', '/jsd', '/unpkg' ,'/releases')),
         'file_ext_list' => '允许的后缀列表：'.implode(',', $allow_ext)
     ));
     exit();
@@ -75,6 +118,9 @@ if (strpos($_SERVER['REQUEST_URI'], '/gh') === 0) {
 }elseif (strpos($_SERVER['REQUEST_URI'], '/unpkg') === 0) {
         $target_host = "https://unpkg.com";
         $new_request_uri = substr($_SERVER['REQUEST_URI'], 6);
+}elseif (strpos($_SERVER['REQUEST_URI'], '/releases') === 0) {
+    $target_host = "https://github.com";
+    $new_request_uri = substr($_SERVER['REQUEST_URI'], 9);
 } else {
     header('content-type: application/json;charset=utf-8');
     // 返回404状态
@@ -176,7 +222,10 @@ function get_mimetype($extension) {
         'moc' => 'text/plain',
         'moc3' => 'text/plain',
         'svg' => 'image/svg+xml',
-        'webp' => 'image/webp'
+        'webp' => 'image/webp',
+        'zip' => 'application/zip',
+        'exe' => 'application/octet-stream',
+        'apk' => 'application/vnd.android.package-archive'
     );
     return isset($ct[strtolower($extension)]) ? $ct[strtolower($extension)] : 'text/plain';
 }
@@ -200,4 +249,7 @@ function array_to_str($array)
 }  
 // 输出网页内容
 echo $homepage;
+
+
+
 ?>
