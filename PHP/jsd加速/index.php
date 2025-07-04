@@ -7,7 +7,7 @@ $file_info = pathinfo($file);
 $file_ext = isset($file_info['extension']) ? $file_info['extension'] : '';
 
 // 允许的文件后缀
-$allow_ext = ['js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'json', 'txt', 'moc', 'moc3', 'svg', 'webp', 'hosts', 'ttf', 'woff', 'woff2', 'eot', 'sgmodule'];
+$allow_ext = ['js', 'css', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'json', 'txt', 'moc', 'moc3', 'svg', 'webp', 'hosts', 'ttf', 'woff', 'woff2', 'eot', 'sgmodule', 'exe'];
 
 // 首页和帮助页
 if ($_SERVER['REQUEST_URI'] == '/') {
@@ -86,7 +86,9 @@ function get_mimetype($extension) {
         'ttf' => 'font/ttf',
         'woff' => 'font/woff',
         'woff2' => 'font/woff2',
-        'eot' => 'application/vnd.ms-fontobject'
+        'eot' => 'application/vnd.ms-fontobject',
+        'sgmodule' => 'application/octet-stream',
+        'exe' => 'application/octet-stream'
     ];
     return $mime_types[strtolower($extension)] ?? 'text/plain';
 }
@@ -107,6 +109,9 @@ if (strpos($_SERVER['REQUEST_URI'], '/gh') === 0) {
 } elseif (strpos($_SERVER['REQUEST_URI'], '/unpkg') === 0) {
     $target_host = "https://unpkg.com";
     $new_request_uri = substr($_SERVER['REQUEST_URI'], 6);
+}elseif (strpos($_SERVER['REQUEST_URI'], '/github') === 0) {
+    $target_host = "https://github.com";
+    $new_request_uri = substr($_SERVER['REQUEST_URI'], 7);
 } else {
     header('content-type: application/json;charset=utf-8');
     http_response_code(404);
